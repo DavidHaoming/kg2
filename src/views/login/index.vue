@@ -1,63 +1,66 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form v-if="!forgetPassword" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="login-form-wrapper">
         <div class="title-container">
           <h3 class="title">
-            <img src="https://developer.chilunyc.com/static/media/logo-2.d93e61a1.svg" />
+            <img src="https://developer.chilunyc.com/static/media/logo-2.d93e61a1.svg" alt="">
           </h3>
         </div>
 
         <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
           <el-input
             ref="username"
             v-model="loginForm.username"
-            placeholder="Username"
+            placeholder="用户名"
             name="username"
             type="text"
             tabindex="1"
             auto-complete="on"
-          />
+          >
+            <svg-icon slot="prefix" icon-class="user" class="svg-icon" />
+          </el-input>
         </el-form-item>
 
         <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
           <el-input
             :key="passwordType"
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="Password"
+            placeholder="密码"
             name="password"
             tabindex="2"
             auto-complete="on"
             @keyup.enter.native="handleLogin"
-          />
+          >
+            <svg-icon slot="prefix" icon-class="password" class="svg-icon" />
+          </el-input>
           <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
         </el-form-item>
 
         <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:22px;" @click.native.prevent="handleLogin">登录</el-button>
-        <div class="tips">
+        <div class="tips" @click="gotoForgetPassword">
           忘记密码?
         </div>
       </div>
 
     </el-form>
+    <forget-password v-else />
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import ForgetPassword from '@/views/login/ForgetPassword'
 
 export default {
   name: 'Login',
+  components: {
+    ForgetPassword
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -84,7 +87,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      forgetPassword: false
     }
   },
   watch: {
@@ -121,6 +125,9 @@ export default {
           return false
         }
       })
+    },
+    gotoForgetPassword() {
+      this.forgetPassword = true
     }
   }
 }
@@ -138,25 +145,20 @@ $cursor: #fff;
 .login-container {
   .el-input {
     display: inline-block;
-    height: 47px;
-    width: 85%;
 
     input {
       background: transparent;
-      border: 0px;
       -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      height: 47px;
+      border-radius: 0;
+      padding: 12px 5px 12px 40px;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $cursor inset !important;
+        box-shadow: 0 0 0 1000px $cursor inset !important;
       }
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
   }
@@ -211,6 +213,9 @@ $cursor: #fff;
     width: 30px;
     display: inline-block;
   }
+  .svg-icon {
+    margin-left: 10px;
+  }
 
   .title-container {
     position: relative;
@@ -218,7 +223,7 @@ $cursor: #fff;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 20px auto;
       text-align: center;
       font-weight: bold;
     }
@@ -227,7 +232,6 @@ $cursor: #fff;
   .show-pwd {
     position: absolute;
     right: 10px;
-    top: 7px;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;
