@@ -88,10 +88,17 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'interface1',
-        name: 'interface1',
-        component: () => import('@/views/interface/index'),
-        meta: { title: '应用授权管理', icon: 'table' }
+        path: 'interView',
+        name: 'interView',
+        component: () => import('@/views/interView/index'),
+        meta: { title: '接口访问记录', icon: 'table' }
+      },
+      {
+        path: 'interViewDetails',
+        name: 'interViewDetails',
+        component: () => import('@/views/interView/modules/details'),
+        meta: { title: '接口访问记录 / 应用详情', icon: 'table' },
+        hidden: true
       },
       // {
       //   path: 'tree',

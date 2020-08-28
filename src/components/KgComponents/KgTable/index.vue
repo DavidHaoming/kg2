@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     calculateTableHeight() {
-      const tableOffsetTop = this.$refs.companyList.$el.offsetTop
+      const tableOffsetTop = this.$slots.default[0].context.$el.offsetTop
       return window.innerHeight - tableOffsetTop - 185
     },
     handleSizeChange(pageSize) {

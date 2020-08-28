@@ -2,7 +2,7 @@
   <div>
     <div class="company-search block-wrapper">
       <div class="search-para">
-        <el-select v-model="value" placeholder="状态" size="medium">
+        <el-select v-model="value" placeholder="所属应用" size="medium">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -10,11 +10,14 @@
             :value="item.value"
           />
         </el-select>
-        <el-input
-          v-model="input"
-          size="medium"
-          placeholder="请输入应用名称"
-          class="search-input"
+        <el-date-picker
+          v-model="value1"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="访问开始日期"
+          end-placeholder="访问结束日期"
+          size="small"
+          style="margin-left: 20px"
         />
       </div>
       <div class="search-operation">
@@ -36,9 +39,9 @@
           :fixed="item.fixed"
         >
           <template slot-scope="scope">
-              <span v-if="item.prop == 'corpId'" style="color:#66b1ff" @click="detail(scope.row)">
-                {{ scope.row[item.prop] || scope.row[item.prop] == 0 ? scope.row[item.prop] : '-' }}
-              </span>
+            <span v-if="item.prop == 'corpId'" style="color:#66b1ff" @click="detail(scope.row)">
+              {{ scope.row[item.prop] || scope.row[item.prop] == 0 ? scope.row[item.prop] : '-' }}
+            </span>
             <span v-else>{{ scope.row[item.prop] || scope.row[item.prop] == 0 ? scope.row[item.prop] : '-' }}</span>
           </template>
         </el-table-column>
@@ -51,7 +54,7 @@
 import KgTable from '@/components/KgComponents/KgTable'
 
 export default {
-  name: 'Interface',
+  name: 'InterView',
   components: {
     KgTable
   },
@@ -65,36 +68,41 @@ export default {
       tableHeader: [
         {
           prop: 'corpId',
-          label: '应用名称'
+          label: '记录ID'
           // width: '160'
         },
         {
           prop: 'name',
-          label: 'Appid'
+          label: '接口名称'
           // width: '160'
         },
         {
           prop: 'name',
-          label: '每分钟访问限制'
+          label: '访问应用'
           // width: '160'
         },
         {
           prop: 'name',
-          label: '状态'
+          label: '访问结果'
           // width: '160'
         },
         {
           prop: 'name',
-          label: '创建时间'
+          label: '响应时长（秒）'
           // width: '160'
         },
         {
           prop: 'name',
-          label: '到期时间'
+          label: 'ip地址'
+          // width: '160'
+        },
+        {
+          prop: 'name',
+          label: '访问时间'
           // width: '160'
         }
       ],
-      input: '',
+      value1: [],
       value: '',
       options: []
     }
@@ -118,9 +126,9 @@ export default {
       return window.innerHeight - tableOffsetTop - 185
     },
     detail(data) {
-      console.log(data)
+      // console.log(data)
       this.$router.push({
-        path: '/inter/interfaceDetail',
+        path: '/inter/interViewDetails',
         query: {
           id: data.id
         }
