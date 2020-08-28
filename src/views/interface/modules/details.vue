@@ -3,79 +3,88 @@
     <div class="dashboard-text">
       <div class="top">
         <div class="top-left">
-            <div class="title">基础信息</div>
-            <el-form ref="form" :model="form" label-width="150px">
-              <el-form-item label="应用名称：">
-                <span>{{form.account}}</span>
-              </el-form-item>
-              <el-form-item label="Appid：">
-                <span>{{form.account}}</span>
-              </el-form-item>
-              <el-form-item label="每分钟访问限制：">
-                <span>{{form.account}}</span>
-              </el-form-item>
-              <el-form-item label="状态：">
-                <span>{{form.account}}</span>
-              </el-form-item>
-              <el-form-item label="创建时间：">
-                <span>{{form.account}}</span>
-              </el-form-item>
-            </el-form>
+          <div class="title">基础信息</div>
+          <el-form ref="form" :model="form" label-width="150px">
+            <el-form-item label="应用名称：">
+              <span>{{ form.account }}</span>
+            </el-form-item>
+            <el-form-item label="Appid：">
+              <span>{{ form.account }}</span>
+            </el-form-item>
+            <el-form-item label="每分钟访问限制：">
+              <span>{{ form.account }}</span>
+            </el-form-item>
+            <el-form-item label="状态：">
+              <span>{{ form.account }}</span>
+            </el-form-item>
+            <el-form-item label="创建时间：">
+              <span>{{ form.account }}</span>
+            </el-form-item>
+          </el-form>
         </div>
         <div class="top-center">
           <div class="center">
             <div class="title">今日访问量
               <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" alt=""></div>
             <p class="num">5134513454</p>
-            <p>成功 <span>{{form.account}}</span>  失败 <span>{{form.account}}</span></p>
+            <p>成功 <span>{{ form.account }}</span>  失败 <span>{{ form.account }}</span></p>
           </div>
           <div class="center" style="margin-top:2%">
             <div class="title">累计访问量
               <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" alt=""></div>
             <p class="num">1234513451</p>
-            <p>成功<span>{{form.account}}</span>  失败 <span>{{form.account}}</span></p>
+            <p>成功<span>{{ form.account }}</span>  失败 <span>{{ form.account }}</span></p>
           </div>
         </div>
         <div class="top-right">
           <div class="title">文档类型分布
             <div class="con">
-              <p>发票：<span>{{form.account}}</span>，占比<span>{{form.account}}</span></p>
-              <p>合同：<span>{{form.account}}</span>，占比<span>{{form.account}}</span></p>
-              <p>订单：<span>{{form.account}}</span>，占比<span>{{form.account}}</span></p>
+              <p>发票：<span>{{ form.account }}</span>，占比<span>{{ form.account }}</span></p>
+              <p>合同：<span>{{ form.account }}</span>，占比<span>{{ form.account }}</span></p>
+              <p>订单：<span>{{ form.account }}</span>，占比<span>{{ form.account }}</span></p>
             </div></div>
-          <div class="pie"><pieChart ref="pieChart"></pieChart></div>
+          <div class="pie"><pieChart ref="pieChart" /></div>
         </div>
       </div>
 
       <div class="bottom">
-        <lineChart ref="lineChart" class="line"></lineChart>
+        <div class="time">
+          <div :class="[{ select: isSelect }, 'time1']" style="border-bottom-left-radius: 5px;border-top-left-radius: 5px;" @click="click(1)">今日</div>
+          <div :class="[{ select: !isSelect }, 'time1']" style="border-bottom-right-radius: 5px;border-top-right-radius: 5px;" @click="click(30)">近30日</div>
+        </div>
+        <lineChart ref="lineChart" class="line" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import pieChart from "@/components/PieChart/pieChart";
-  import lineChart from "@/components/LineChart/lineChart";
+import pieChart from '@/components/PieChart/pieChart'
+import lineChart from '@/components/LineChart/lineChart'
 
-  export default {
-    name: 'personalInfo',
-    components:{
-      pieChart,
-      lineChart
-    },
-    computed: {},
-    data() {
-      return {
-        form: {}
-      }
-    },
-    methods: {
-      submit(data){
-        this.isEdit = data;
+export default {
+  name: 'PersonalInfo',
+  components: {
+    pieChart,
+    lineChart
+  },
+  data() {
+    return {
+      form: {},
+      isSelect: true
+    }
+  },
+  computed: {},
+  methods: {
+    click(data) {
+      if (data == 1) {
+        this.isSelect = true
+      } else {
+        this.isSelect = false
       }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -147,6 +156,23 @@
         width: 100%;
         background-color: #fff;
         border-radius: 5px;
+        .time{
+          position: fixed;
+          right: 100px;
+          z-index: 99;
+          cursor: pointer;
+          .time1{
+            display: inline-block;
+            font-size: 18px;
+            width: 100px;
+            line-height: 36px;
+            text-align: center;
+            background-color: #f2f2f2;
+          }
+          .select{
+            color: #20a0ff;
+          }
+        }
         .line{
           padding-top: 20px;
           padding-left: 1%;
