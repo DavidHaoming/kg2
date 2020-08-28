@@ -1,0 +1,190 @@
+<template>
+  <div>
+    <div class="company-search block-wrapper">
+      <div class="search-para">
+        <el-select v-model="value" placeholder="状态" size="medium">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-input v-model="input"
+                  size="medium"
+                  placeholder="请输入应用名称"
+                  class="search-input"
+        />
+      </div>
+      <div class="search-operation">
+        <el-button size="medium" type="primary">查询</el-button>
+        <el-button size="medium">重置</el-button>
+      </div>
+    </div>
+    <div class="company-list block-wrapper">
+      <div class="list-table">
+        <el-table ref="companyList" :height="tableHeight" :data="tableData" border style="width: 100%">
+          <el-table-column :align="item.align || 'left'" :prop="item.prop" :label="item.label" :key="item.id"
+                           v-for="(item) in tableHeader" :show-overflow-tooltip="true" :width="item.width"
+                           :min-width="item.minWidth" :fixed="item.fixed">
+            <template slot-scope="scope">
+              <span v-if="item.prop == 'corpId'" style="color:#66b1ff" @click="detail(scope.row)">
+                {{scope.row[item.prop] || scope.row[item.prop] == 0 ? scope.row[item.prop] : '-' }}
+              </span>
+              <span v-else>{{scope.row[item.prop] || scope.row[item.prop] == 0 ? scope.row[item.prop] : '-' }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="pagination">
+        <div class="total">
+          总共{{tableData.length}}个项目
+        </div>
+        <div class="pagination-info">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[100, 200, 300, 400]"
+            :page-size="100"
+            layout="prev, pager, next, sizes, jumper"
+            :total="tableData.length">
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+  export default {
+    name: 'interface',
+    data() {
+      return {
+        tableHeight: 0,
+        showTable: false,
+        tableData: [
+          { corpId: 1 },
+        ],
+        tableHeader: [
+          {
+            prop: 'corpId',
+            label: '应用名称',
+            // width: '160'
+          },
+          {
+            prop: 'name',
+            label: 'Appid',
+            // width: '160'
+          },
+          {
+            prop: 'name',
+            label: '每分钟访问限制',
+            // width: '160'
+          },
+          {
+            prop: 'name',
+            label: '状态',
+            // width: '160'
+          },
+          {
+            prop: 'name',
+            label: '创建时间',
+            // width: '160'
+          },
+          {
+            prop: 'name',
+            label: '到期时间',
+            // width: '160'
+          }
+        ]
+      }
+    },
+    created() {
+      window.onresize = () => {
+        this.tableHeight = this.calculateTableHeight()
+      }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.tableHeight = this.calculateTableHeight()
+        this.showTable = true
+      }, 0)
+    },
+    methods: {
+      calculateTableHeight() {
+        let tableOffsetTop = this.$refs.companyList.$el.offsetTop
+        // console.log(tableOffsetTop, this.$refs.companyList.$el)
+        // console.log(window.innerHeight - tableOffsetTop - 94)
+        return window.innerHeight - tableOffsetTop - 185
+      },
+      add() {
+        this.$router.push({
+          path: '/companyDetail',
+          query:{
+            types : "add"
+          }
+        });
+      },
+      handleClick(row) {
+        this.$router.push({
+          path: '/companyDetail',
+          query:{
+            types : "edit",
+            id: row.id
+          }
+        });
+      },
+      detail(data){
+        console.log(data);
+        this.$router.push({
+          path: '/inter/interfaceDetail',
+          query:{
+            id : data.id
+          }
+        });
+      },
+      handleSizeChange(pageSize){
+        console.log(pageSize)
+      },
+      handleCurrentChange(currentPage){
+        console.log(currentPage)
+      },
+      currentPage(){
+
+      },
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .block-wrapper {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  .company {
+    &-search {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      .search-input {
+        width: 300px;
+        margin-left: 10px;
+      }
+    }
+  }
+  .company-list {
+    .add {
+      margin-bottom: 10px;
+    }
+    .list-table {
+      margin-bottom: 10px;
+    }
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+</style>
